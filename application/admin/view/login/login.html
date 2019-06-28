@@ -107,7 +107,7 @@
                    alert(res.code)
                    $('#chend').attr('src',"{:captcha_src()}?"+Math.random())
                }else{
-                   alert('cg')
+                   location.href="{:url('permission/list')}"
                }
             }
         })

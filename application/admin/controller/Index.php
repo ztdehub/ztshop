@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 use think\Db;
-class Index
+class Index extends Common
 {
     public function index(){
 
