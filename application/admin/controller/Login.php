@@ -10,6 +10,10 @@ class Login extends Controller
     public function login(){
         return $this->fetch();
     }
+    public function out(){
+        Session::delete('name');
+        $this->redirect('login/login');
+    }
     public function check(){
         $captcha = new Captcha();
         $value=input('post.value');

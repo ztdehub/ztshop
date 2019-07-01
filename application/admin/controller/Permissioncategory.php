@@ -5,7 +5,7 @@ use think\Controller;
 use think\Db;
 use gmars\rbac\Rbac;
 
-class Permission extends Common
+class Permissioncategory extends Common
 {
     public function list(){
         return $this->fetch();
@@ -19,11 +19,11 @@ class Permission extends Common
         $rbac = new Rbac();
         $result =Request::post();
         //验证器将数组传过去根据字段分析内容是否符合
-            if (!$validate->check($result)) {
-                 $json=['code'=>'1','status'=>'error','data'=>$validate->getError()];
-                echo json_encode($json);
-                die;
-            }
+        if (!$validate->check($result)) {
+            $json=['code'=>'1','status'=>'error','data'=>$validate->getError()];
+            echo json_encode($json);
+            die;
+        }
 
         //验证用户名是否重复
         $arr = $rbac->getPermissionCategory(['name' => $result['name']]);
@@ -114,10 +114,9 @@ class Permission extends Common
         echo json_encode($json);
 
     }
-    public function aa(){
+    function aa(){
         $rbac = new Rbac();
         $rbac->createTable();
 
     }
-
 }

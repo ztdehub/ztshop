@@ -8,4 +8,7 @@ class Index
     {
         return view('index');
     }
+    function aa(){
+        echo 23;
+    }
 }

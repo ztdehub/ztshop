@@ -51,7 +51,7 @@
                         <ul class="dropDown-menu menu radius box-shadow">
                             <li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
                             <li><a href="#">切换账户</a></li>
-                            <li><a href="#">退出</a></li>
+                            <li><a href="{:url('login/out')}">退出</a></li>
                         </ul>
                     </li>
                     <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
@@ -75,12 +75,13 @@
 <!--_menu 作为公共模版分离出去-->
 <aside class="Hui-aside">
 
+
     <div class="menu_dropdown bk_2">
         <dl id="menu-article">
-            <dt><i class="Hui-iconfont">&#xe616;</i> 资讯管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dt><i class="Hui-iconfont">&#xe613;</i> 咨询管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a href="article-list.html" title="资讯管理">资讯管理</a></li>
+                    <li><a href="picture-list.html" title="图片管理">咨询管理</a></li>
                 </ul>
             </dd>
         </dl>
@@ -126,12 +127,18 @@
             </dd>
         </dl>
         <dl id="menu-admin">
-            <dt class="selected"><i class="Hui-iconfont">&#xe62d;</i> 管理员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-            <dd style="display:block">
+            <dt><i class="Hui-iconfont">&#xe62d;</i> 管理员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dd>
                 <ul>
-                    <li><a href="admin-role.html" title="角色管理">角色管理</a></li>
-                    <li class="current"><a href="admin-permission.html" title="权限管理">权限管理</a></li>
-                    <li><a href="admin-list.html" title="管理员列表">管理员列表</a></li>
+                    <li>
+                        <a href="{:url('permission/list')}" title="角色管理">角色管理</a>
+                    </li>
+                    <li>
+                        <a href="{:url('permissioncategory/list')}" title="权限管理">权限管理</a>
+                    </li>
+                    <li>
+                        <a href="admin-list.html" title="管理员列表">管理员列表</a>
+                    </li>
                 </ul>
             </dd>
         </dl>
@@ -163,5 +170,5 @@
         </dl>
     </div>
 </aside>
-<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+
 <!--/_menu 作为公共模版分离出去-->
