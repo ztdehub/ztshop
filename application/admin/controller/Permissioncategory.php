@@ -4,6 +4,7 @@ use Request;
 use think\Controller;
 use think\Db;
 use gmars\rbac\Rbac;
+use think\facade\Session;
 
 class Permissioncategory extends Common
 {
@@ -85,9 +86,13 @@ class Permissioncategory extends Common
             }
         }
     }
-
-
-
+    //命令
+    public function token(){
+        $token = $this->request->token('__token__', 'sha1');
+        $json=['code'=>'0','status','error'=>'ok','data'=>$token];
+        echo json_encode($json);
+        Session::set('token',$token);
+    }
     //批量删除
     public function datadel(){
         $id=input('post.id');
@@ -103,20 +108,19 @@ class Permissioncategory extends Common
             $json=['code'=>'0','status'=>'ok','data'=>'删除成功'];
             echo json_encode($json);
         }
-
     }
 
     public function del(){
+        $token=Session::get('token');
+        $tokens=input('post.tokens');
+        if ($token!=$tokens){
+            $json=['code'=>0,'data'=>'命令不匹配'];
+            echo json_encode($json);
+            die;
+        }
         $id=input('post.id');
         Db::table('permission_category')->where('id',$id)->delete();
-        $arr=Db::table('permission_category')->select();
-        $json=['code'=>1,'data'=>$arr];
+        $json=['code'=>1,'data'=>'删除成功'];
         echo json_encode($json);
-
-    }
-    function aa(){
-        $rbac = new Rbac();
-        $rbac->createTable();
-
     }
 }

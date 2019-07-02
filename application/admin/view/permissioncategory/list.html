@@ -9,10 +9,12 @@
                     <input type="text" class="input-text" style="width:250px" placeholder="权限名称"  name="">
                     <button type="submit" class="btn btn-success" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜权限节点</button>
                 </form>
-
             </div>
             <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
                 <a href="javascript:;" class="btn btn-primary radius" onclick="modaldemo()"><i class="Hui-iconfont">&#xe600;</i> 添加权限节点</a>
+                <!--令牌-->
+                <input type="text" id="token">
+
             </span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
             <table class="table table-border table-bordered table-bg">
                 <thead>
@@ -106,7 +108,7 @@
 <script type="text/javascript">
     function show() {
         $.ajax({
-            url:"{:url('permission/show')}",
+            url:"{:url('permissioncategory/show')}",
             dataType:'json',
             success:function (res) {
                 var code=res.data;
@@ -119,6 +121,8 @@
             }
         })
     }
+    //命令
+
     //批量删除
     function datadel() {
         var box=$(".mycheckbox:checked")
@@ -127,7 +131,7 @@
             id=id+','+box[i].value
         }
         $.ajax({
-            url:"{:url('permission/datadel')}",
+            url:"{:url('permissioncategory/datadel')}",
             data:{
                 id:id
             },
@@ -138,10 +142,22 @@
                    alert(res.data)
                }else {
                    $.Huimodalalert('删除成功',1000);
-                  show()
+                   show()
+                   token()
                }
             }
         });
+    }
+    //获取令牌
+    function token() {
+        $.ajax({
+            url:"{:url('permissioncategory/token')}",
+            dataType: "json",
+            success:function (res) {
+                console.log(res.data)
+                $('#token').val(res.data)
+            }
+        })
     }
     //添加
     function modaldemo(){
@@ -150,7 +166,7 @@
     function modalup(id){
         $("#modal-up").modal("show");
         $.ajax({
-            url:"{:url('permission/per_sel')}",
+            url:"{:url('permissioncategory/per_sel')}",
             type:"post",
             data:{
                 id:id,
@@ -170,10 +186,12 @@
         var id=$('#id').val();
         var name=$('#names').val();
         var description=$('#s').val();
+
         $.ajax({
-            url:"{:url('permission/per_update')}",
+            url:"{:url('permissioncategory/per_update')}",
             type:"post",
             data:{
+
                 id:id,
                 name:name,
                 description:description
@@ -188,22 +206,32 @@
                 }else {
                     $("#modal-up").modal("hide");
                     show();
+                    token()
                 }
             }
         })
     }
 //删除
     function del(id) {
+        var tokens=$('#token').val();
         $.ajax({
-            url:"{:url('permission/del')}",
+            url:"{:url('permissioncategory/del')}",
             data:{
+                tokens:tokens,
                 id:id
             },
             type:'post',
             dataType: "json",
             success:function (res) {
-                $.Huimodalalert('删除成功',1000);
-                show()
+                console.log(res)
+                if(res.code=='0'){
+                    alert(res.data)
+                    token()
+                }else {
+                    $.Huimodalalert('删除成功',1000);
+                    show();
+                    token()
+                }
             }
         })
     }
@@ -213,7 +241,7 @@
             var name=$('#name').val()
             var description=$('#description').val()
             $.ajax({
-                url:"{:url('permission/add')}",
+                url:"{:url('permissioncategory/add')}",
                 data:{
                     name:name,
                     description:description
@@ -228,6 +256,7 @@
                         $('#pan').html(res.data)
                     }else {
                         show();
+                        token()
                         $('#name').val('')
                         $('#description').val('')
                         $('#pan').html(res.data)
@@ -236,44 +265,9 @@
             })
         })
         show()
+        token()
     })
 
-    $(function () {
-//全选
-        $("#selectAll").click(function () {
-            $(":checkbox").attr("checked", true);
-        });
-// 显示文本框并显示原值
-        $(document).on("click", ".click", function () {
-            var _this = $(this);
-            var old_val = _this.html(); // 获取要修改的值
-            _this.parent().html("<input type='text' name=" + old_val + " class='focus' value=" + old_val + " />"); // 显示文本框
-            $(".focus").focus(); // 存在瑕疵，光标无法聚焦到文本最后的位置
-            $(":text").select(); // 改进，弥补瑕疵，全选文字
-        });
-// 还原列表并修改数据
-        $(document).on("blur", ".focus", function () {
-            var _this = $(this);
-// 获取所需参数
-            var key = _this.parent().attr("name");
-            var old_val = _this.attr("name");
-            var new_val = _this.val();
-            var id = _this.parents("tr").attr("id");
-// 修改数据
-            $.post("shop.edit", {key: key, id: id, old_val: old_val, new_val: new_val}, function(msg) {
-                if(msg == 0){
-                    alert('无修改');
-                    _this.parent().html('<span class="click">' + old_val + '</span>');
-                }else if(msg == 100){
-                    _this.parent().html('<span class="click">' + old_val + '</span>');
-                    alert('修改失败');
-                }else if(msg == 200){
-                    _this.parent().html('<span class="click">' + new_val + '</span>');
-                    alert('修改成功');
-                }
-            })
-        })
-    })
 
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
