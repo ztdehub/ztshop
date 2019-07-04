@@ -24,26 +24,30 @@ class Permission extends Common
                 echo json_encode($json);
                 die;
             }
-
         //验证用户名是否重复
-        $arr = $rbac->getPermissionCategory(['name' => $result['name']]);
-        if (empty($arr)) {
-            $rbac->savePermissionCategory([
+        $arr = $rbac->getPermission(['name' => $result['name']]);
+        $ass = $rbac->getPermission(['path' => $result['path']]);
+        if (empty($arr) && empty($ass)) {
+            $rbac->createPermission([
                 'name' => $result['name'],
                 'description' => $result['description'],
-                'status' => 1
+                'status' => 1,
+                'type' => 1,
+                'category_id' => $result['select'],
+                'path' => $result['path'],
             ]);
+//            $rbac=new Rbac();
+//            $arr=$rbac->getPermissionCategory([]);
             $json = ['code'=>'2','status' => 'ok', 'data' => '添加成功'];
             echo json_encode($json);
         } else {
-            $json = ['code'=>'3','status' => 'error', 'data' => '权限已存在不能重复添加'];
+            $json = ['code'=>'3','status' => 'error', 'data' => '权限或路劲存在不能重复添加'];
             echo json_encode($json);
             die;
         }
     }
     public function show(){
-        $rbac=new Rbac();
-        $arr=$rbac->getPermissionCategory([]);
+        $arr=Db::table('permission')->field(' permission.id,permission.path,permission.description,permission.category_id,permission.name as p_name,permission_category.name')->join('permission_category','permission.category_id = permission_category.id')->select();
         $json=['data'=>$arr];
         echo json_encode($json);
     }
@@ -54,39 +58,42 @@ class Permission extends Common
         echo json_encode($json);
     }
 
-    public function per_update(){
+    //修改
+    function update(){
+        $id=input('post.update_id');
+        $update_path=input('post.update_path');
+        $update_name=input('post.update_name');
+        $update_description=input('post.update_description');
+        $update_select=input('post.update_select');
         $validate = new \app\admin\validate\Permission;
         $result =Request::post();
         $rbac = new Rbac();
-        $id=input('post.id');
-        if (!$validate->check($result)) {
-            $json=['code'=>'1','status'=>'error','data'=>$validate->getError()];
+//        if (!$validate->check($result)) {
+//            $json=['code'=>'3','status'=>'error','data'=>$validate->getError()];
+//            echo json_encode($json);
+//            die;
+//        }
+        $ajj=Db::query("select id from permission where name = '$update_name' or path = '$update_path'");
+        if (empty($ajj)){
+            $data=['name'=>$update_name,'category_id'=>$update_select,'path'=>$update_path,'description'=>$update_description];
+            Db::table('permission')->where('id','=',$id)->update($data);
+            $json=['code'=>'0','status'=>'ok','data'=>'修改成功'];
             echo json_encode($json);
-            die;
-        }
-        //验证用户名3 是否重复
-        $arr = $rbac->getPermissionCategory(['name' => $result['name']]);
-//        var_dump($arr);
-        if (empty($arr)) {
-            $data=['name'=>$result['name'],'description'=>$result['description']];
-            Db::table('permission_category')->where('id',$id)->update($data);
-            $json = ['code'=>'2','status' => 'ok', 'data' => '添加成功'];
-            echo json_encode($json);
-        } else {
-            if ($arr[0]['id']==$result['id']){
-                $data=['name'=>$result['name'],'description'=>$result['description']];
-                Db::table('permission_category')->where('id',$id)->update($data);
-                $json = ['code'=>'2','status' => 'ok', 'data' => '添加成功'];
-                echo json_encode($json);
-            }else{
-                $json = ['code'=>'3','status' => 'error', 'data' => '权限已存在不能重复添加'];
-                echo json_encode($json);
-                die;
+        }else{
+            foreach ($ajj as $key => $value){
+                if ($value['id']!=$id){
+                    $json=['code'=>'0','status'=>'error','data'=>'权限或者路径重复'];
+                    echo json_encode($json);
+                    die;
+                }
             }
+            $data=['name'=>$update_name,'category_id'=>$update_select,'path'=>$update_path,'description'=>$update_description];
+            Db::table('permission')->where('id','=',$id)->update($data);
+            $json=['code'=>'0','status'=>'ok','data'=>'修改成功'];
+            echo json_encode($json);
         }
+        //取到id和查询出来id相同可修改，名称一样不能修改，路径一样不能修改
     }
-
-
 
     //批量删除
     public function datadel(){
@@ -99,25 +106,14 @@ class Permission extends Common
             echo json_encode($json);
         }else{
             $rbac=new Rbac();
-            $rbac->delPermissionCategory($pieces);
+            $rbac->delPermission($pieces);
             $json=['code'=>'0','status'=>'ok','data'=>'删除成功'];
             echo json_encode($json);
         }
 
     }
-
     public function del(){
         $id=input('post.id');
-        Db::table('permission_category')->where('id',$id)->delete();
-        $arr=Db::table('permission_category')->select();
-        $json=['code'=>1,'data'=>$arr];
-        echo json_encode($json);
-
+        Db::table('permission')->where('id',$id)->delete();
     }
-    public function aa(){
-        $rbac = new Rbac();
-        $rbac->createTable();
-
-    }
-
 }

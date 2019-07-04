@@ -1,7 +1,7 @@
 {include file="header"/}
 <div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
 <section class="Hui-article-box">
-    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 权限管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 管理员 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
             <div class="text-c">
@@ -24,8 +24,8 @@
                 <tr class="text-c">
                     <th width="25"><input type="checkbox" name="" value=""></th>
                     <th width="40">ID</th>
-                    <th width="200">权限名称</th>
-                    <th>描述</th>
+                    <th width="200">用户名</th>
+                    <th>手机</th>
                     <th width="100">操作</th>
                 </tr>
                 </thead>
@@ -114,7 +114,7 @@
                 var tr='';
                 console.log(res)
                 for (var i=0; i<code.length; i++) {
-                     tr = tr + "<tr class='text-c'> <td><input value='"+code[i].id+"' class='mycheckbox' type='checkbox' ></td> <td>" + code[i].id + "</td>  <td class='text-l'>" + code[i].name + "</td><td class='text-l'>" + code[i].description + "</td> <td class='f-14 product-brand-manage'><a   onclick='modalup("+ code[i].id +")' style='text-decoration:none'  href='javascript:;' title='编辑'><i class='Hui-iconfont'>&#xe6df;</i></a> <a style='text-decoration:none' class='ml-5'  onclick='del(" + code[i].id + ")' title='删除' ><i class='Hui-iconfont'>&#xe6e2;</i></a></td> </tr>";
+                    tr = tr + "<tr class='text-c'> <td><input value='"+code[i].id+"' class='mycheckbox' type='checkbox' ></td> <td>" + code[i].id + "</td>  <td class='text-l'>" + code[i].name + "</td><td class='text-l'>" + code[i].description + "</td> <td class='f-14 product-brand-manage'><a   onclick='modalup("+ code[i].id +")' style='text-decoration:none'  href='javascript:;' title='编辑'><i class='Hui-iconfont'>&#xe6df;</i></a> <a style='text-decoration:none' class='ml-5'  onclick='del(" + code[i].id + ")' title='删除' ><i class='Hui-iconfont'>&#xe6e2;</i></a></td> </tr>";
                 }
                 $(".table tbody").html(tr)
             }
@@ -137,13 +137,13 @@
             type:'post',
             dataType: "json",
             success:function (res) {
-               if(res.status=='error'){
-                   alert(res.data)
-               }else {
-                   $.Huimodalalert('删除成功',1000);
-                   show()
-                   token()
-               }
+                if(res.status=='error'){
+                    alert(res.data)
+                }else {
+                    $.Huimodalalert('删除成功',1000);
+                    show()
+                    token()
+                }
             }
         });
     }
@@ -180,7 +180,7 @@
             }
         });
     }
-//修改
+    //修改
     function update() {
         var id=$('#id').val();
         var name=$('#names').val();
@@ -210,7 +210,7 @@
             }
         })
     }
-//删除
+    //删除
     function del(id) {
         var tokens=$('#token').val();
         $.ajax({

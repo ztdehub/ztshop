@@ -16,7 +16,7 @@ class Permissioncategory extends Common
     }
     public function add()
     {
-        $validate = new \app\admin\validate\Permission;
+        $validate = new \app\admin\validate\Permissioncategory;
         $rbac = new Rbac();
         $result =Request::post();
         //验证器将数组传过去根据字段分析内容是否符合
@@ -56,7 +56,7 @@ class Permissioncategory extends Common
     }
 
     public function per_update(){
-        $validate = new \app\admin\validate\Permission;
+        $validate = new \app\admin\validate\Permissioncategory;
         $result =Request::post();
         $rbac = new Rbac();
         $id=input('post.id');
@@ -114,13 +114,13 @@ class Permissioncategory extends Common
         $token=Session::get('token');
         $tokens=input('post.tokens');
         if ($token!=$tokens){
-            $json=['code'=>0,'data'=>'命令不匹配'];
+            $json=['code'=>'0','status'=>'error','data'=>'命令不匹配'];
             echo json_encode($json);
             die;
         }
         $id=input('post.id');
         Db::table('permission_category')->where('id',$id)->delete();
-        $json=['code'=>1,'data'=>'删除成功'];
+        $json=['code'=>'1','status'=>'ok','data'=>'删除成功'];
         echo json_encode($json);
     }
 }

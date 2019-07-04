@@ -4,7 +4,7 @@ namespace app\admin\validate;
 
 use think\Validate;
 
-class Permission extends Validate
+class Role extends Validate
 {
     /**
      * 定义验证规则
@@ -14,7 +14,7 @@ class Permission extends Validate
      */
     protected $rule = [
         'name'  =>  'require|max:10',
-        'path' => 'require|max:25',
+        'id' => 'require|max:25',
         'description' => 'require|max:25',
     ];
 
