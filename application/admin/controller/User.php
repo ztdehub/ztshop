@@ -13,59 +13,41 @@ class User extends Common
     public function permission_add(){
         return $this->fetch();
     }
-    function aa(){
-        $rbac=new Rbac();
-        $rbac->assignUserRole(1, [8]);
-    }
+
     public function add()
     {
-        $id=input('post.id');
-        $role=Db::table('role_permission')->where('role_id','=',$id)->select();
-        $arr=Db::table('permission')->field(' permission.id,permission.path,permission.description,permission.category_id,permission.name as p_name,permission_category.name')->join('permission_category','permission.category_id = permission_category.id')->select();
-        $ass=[];
-        foreach ($arr as $value) {
-            $ass[$value['name']][]=[$value['p_name'],$value['id']];
-        }
-        $json=['data'=>$ass,'role'=>$role];
-        echo json_encode($json);
-    }
-    //添加角色权限
-    function role_add(){
         $name=input('post.name');
-        $id=input('post.id');
-        $description=input('post.description');
-        $a = substr($id,1);
-        $validate = new \app\admin\validate\Role;
-        $result =Request::post();
-        if (!$validate->check($result)) {
-            $json=['code'=>'1','status'=>'error','data'=>$validate->getError()];
-            echo json_encode($json);
-            die;
-        }
-        //去除数组首个字段
-        $rbac=new Rbac();
-        $arr=Db::table('role')->where('name','=',$name)->select();
-        if (empty($arr)){
-            $rbac->createRole([
-                'name' => $name,
-                'description' => $description,
-                'status' => 1
-            ], $a);
-            $json = ['code'=>'1','status' => 'ok', 'data' => '添加成功'];
+        $password=input('post.password');
+        $mobile=input('post.mobile');
+        $role=input('post.role');
+        $time=date("Y-m-d H:i:s");
+        $ass=Db::table('user')->where('user_name','=',$name)->select();
+        if (empty($ass)){
+            $data=['user_name'=>$name,'password'=>$password,'mobile'=>$mobile,'create_time'=>$time];
+            Db::table('user')->insert($data);
+            $arr=Db::table('user')->where('user_name','=',$name)->select();
+            $id=$arr[0]['id'];
+            $rbac=new Rbac();
+            $rbac->assignUserRole($id, [$role]);
+            $json=['code'=>'1','status'=>'ok','data'=>'添加成功'];
             echo json_encode($json);
         }else{
-            $json = ['code'=>'0','status' => 'error', 'data' =>'角色已经存在'];
+            $json=['code'=>'0','status'=>'error','data'=>'用户已存在'];
             echo json_encode($json);
         }
 
     }
-
-    public function show(){
-//        $arr=Db::table('role_permission')->field('permission.name as p_name,role.name,role.description')->join('permission','permission.id = role_permission.permission_id')->join('role','role.id = role_permission.role_id')->select();
+    public function role(){
         $arr=Db::table('role')->select();
         $json=['data'=>$arr];
         echo json_encode($json);
     }
+    public function show(){
+        $arr=Db::table('user_role')->field('user.id,user_role.role_id,user.password,user.user_name,user.mobile,user.last_login_time,user.create_time,user.update_time,role.name')->join('user','user.id = user_role.user_id')->join('role','role.id = user_role.role_id')->select();
+        $json=['data'=>$arr];
+        echo json_encode($json);
+    }
+
     public function per_sel(){
         $id=input('post.id');
         $arr=Db::table('permission_category')->where('id',$id)->select();
@@ -75,54 +57,41 @@ class User extends Common
 
     //修改
     function update(){
-        $r_id=input('post.r_id');
         $id=input('post.id');
-        $description=input('post.description');
         $name=input('post.name');
-        $a = substr($id,1);
-        $role=explode(',',$a);
-        $arr=Db::table('role')->where('name','=',$name)->select();
-        if (empty($arr) || !empty($arr) && $arr[0]['id']==$r_id){
-            $data=['name'=>$name,'description'=>$description];
-            Db::table('role')->where('id','=',$r_id)->update($data);
-            Db::table('role_permission')->where('role_id','=',$r_id)->delete();
-            $validate = new \app\admin\validate\Role;
-            $result =Request::post();
-            if (!$validate->check($result)) {
-                $json=['code'=>'2','status'=>'error','data'=>$validate->getError()];
-                echo json_encode($json);
-                die;
-            }
-            foreach ($role as $key=>$value){
-                Db::query("insert into role_permission  (`role_id`,`permission_id`) value ('$r_id','$value')");
-            }
-            $json=['code'=>'1','status'=>'ok','data'=>'修改成功'];
-            echo json_encode($json);
+        $password=input('post.password');
+        $mobile=input('post.mobile');
+        $role=input('post.role');
+        $arr=Db::table('user')->where('user_name','=',$name)->select();
+        if (empty($arr) || $id==$arr[0]['id']){
+            $data=['user_name'=>$name,'password'=>$password,'mobile'=>$mobile];
+            Db::table('user')->where('id','=',$id)->update($data);
+            $rbac=new Rbac();
+            $rbac->assignUserRole($id, [$role]);
+            echo '修改成功';
         }else{
-            $json=['code'=>'0','status'=>'error','data'=>'角色名不能重复'];
-            echo json_encode($json);
+            echo '不能修改';
         }
     }
     //批量删除
     public function datadel(){
         $id=input('post.id');
-        $pieces = explode(",",$id);
+        $pieces =   $a = substr($id,1);
         //去除数组首个字段
-        array_shift($pieces);
         if ($id==''){
             $json=['code'=>'0','status'=>'error','data'=>'请选择删除内容'];
             echo json_encode($json);
         }else{
-            $rbac=new Rbac();
-            $rbac->delRole($pieces);
-            $json=['code'=>'0','status'=>'ok','data'=>'删除成功'];
+            Db::table('user')->where('id','in',$pieces)->delete();
+            Db::table('user_role')->where('user_id','in',$pieces)->delete();
+            $json=['code'=>'0','status'=>'ok','
+            data'=>'删除成功'];
             echo json_encode($json);
         }
-
     }
     public function del(){
         $id=input('post.id');
-        Db::table('role')->where('id',$id)->delete();
-        Db::table('role_permission')->where('role_id',$id)->delete();
+        Db::table('user')->where('id',$id)->delete();
+        Db::table('user_role')->where('user_id',$id)->delete();
     }
 }
