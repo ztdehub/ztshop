@@ -1,0 +1,138 @@
+{include file="header"/}
+<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+<section class="Hui-article-box">
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 产品管理 <span class="c-gray en">&gt;</span> 产品添加 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <div class="Hui-article">
+        <article class="cl pd-20">
+            <div class="page-container">
+                <div class="form form-horizontal">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>产品标题：</label>
+                        <div class="formControls col-xs-8 col-sm-9">
+                            <input type="text" class="input-text" value="" placeholder="" id="goodsname" name="">
+                        </div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>品牌栏目：</label>
+                        <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select name="" class="select" id="brand">
+
+				</select>
+				</span> </div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分类栏目：</label>
+                        <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select name="" class="select" id="select">
+
+				</select>
+				</span> </div>
+                    </div>
+
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">产品展示价格：</label>
+                        <div class="formControls col-xs-8 col-sm-9">
+                            <input type="text" name="" id="" placeholder="" value="" class="input-text" style="width:90%">
+                            元</div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">市场价格：</label>
+                        <div class="formControls col-xs-8 col-sm-9">
+                            <input type="text" name="" id="" placeholder="" value="" class="input-text" style="width:90%">
+                            元</div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">成本价格：</label>
+                        <div class="formControls col-xs-8 col-sm-9">
+                            <input type="text" name="" id="" placeholder="" value="" class="input-text" style="width:90%">
+                            元</div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">销售开始时间：</label>
+                        <div class="formControls col-xs-8 col-sm-9">
+                            <input type="date"  id="datemin" class="input-text Wdate" style="width:180px;">
+                        </div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">销售结束时间：</label>
+                        <div class="formControls col-xs-8 col-sm-9">
+                            <input type="date"  id="datemax" class="input-text Wdate" style="width:180px;">
+                        </div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">产品关键字：</label>
+                        <div class="formControls col-xs-8 col-sm-9">
+                            <input type="text" name="" id="" placeholder="多个关键字用英文逗号隔开，限10个关键字" value="" class="input-text">
+                        </div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-2">产品摘要：</label>
+                        <div class="formControls col-xs-8 col-sm-9">
+                            <textarea name="" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,200)"></textarea>
+                            <p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
+                        </div>
+                    </div>
+                    <div class="row cl">
+                        <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                            <button class="btn btn-primary radius" type="submit" id="add"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+{include file="footer"/}
+
+<script type="text/javascript">
+    function brand() {
+        $.ajax({
+            url:"{:url('brand/show')}",
+            dataType: "json",
+            success:function (res) {
+                var ret='';
+                var code=res.data;
+                console.log(code)
+                $.each(code,function($key,$value){
+                    ret=ret+"<option value='"+$value['id']+"'>"+$value['name']+"</option>";
+                })
+                $("#brand").html(ret)
+            }
+        })
+    }
+    function show() {
+        var sel='';
+        $.ajax({
+            url:"{:url('goods/add_show')}",
+            success:function (res) {
+                $("#select").html(res)
+            }
+        })
+    }
+    $(document).ready(function () {
+        $("#add").click(function () {
+            var name=$("#goodsname").val()
+            var brand=$("#brand").val()
+            var sort=$("#select").val()
+            $.ajax({
+                url:"{:url('goods/add')}",
+                data:{
+                    name:name,
+                    brand_id:brand,
+                    sort_id:sort,
+                },
+                type:"post",
+//                dateType:"json",
+                success:function (res) {
+                    console.log(res)
+                }
+            })
+        })
+        brand()
+        show()
+
+    })
+</script>
+
+</body>
+</html>

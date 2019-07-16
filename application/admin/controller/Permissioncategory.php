@@ -55,7 +55,7 @@ class Permissioncategory extends Common
         echo json_encode($json);
     }
 
-    public function per_update(){
+    public function update(){
         $validate = new \app\admin\validate\Permissioncategory;
         $result =Request::post();
         $rbac = new Rbac();

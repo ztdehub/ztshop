@@ -35,7 +35,6 @@ class User extends Common
             $json=['code'=>'0','status'=>'error','data'=>'用户已存在'];
             echo json_encode($json);
         }
-
     }
     public function role(){
         $arr=Db::table('role')->select();
@@ -82,8 +81,13 @@ class User extends Common
             $json=['code'=>'0','status'=>'error','data'=>'请选择删除内容'];
             echo json_encode($json);
         }else{
-            Db::table('user')->where('id','in',$pieces)->delete();
-            Db::table('user_role')->where('user_id','in',$pieces)->delete();
+            //事务
+            Db::transaction(function (){
+                $id=input('post.id');
+                $pieces =   $a = substr($id,1);
+                Db::table('user')->where('id','in',$pieces)->delete();
+                Db::table('user_role')->where('user_id','in',$pieces)->delete();
+            });
             $json=['code'=>'0','status'=>'ok','
             data'=>'删除成功'];
             echo json_encode($json);

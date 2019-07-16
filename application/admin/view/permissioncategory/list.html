@@ -160,7 +160,8 @@
     }
     //添加
     function modaldemo(){
-        $("#modal-demo").modal("show")}
+        $("#modal-demo").modal("show")
+    }
     //查询展示
     function modalup(id){
         $("#modal-up").modal("show");
@@ -187,7 +188,7 @@
         var description=$('#s').val();
 
         $.ajax({
-            url:"{:url('permissioncategory/per_update')}",
+            url:"{:url('permissioncategory/update')}",
             type:"post",
             data:{
 

@@ -13,7 +13,7 @@ class Role extends Common
     public function permission_add(){
         return $this->fetch();
     }
-    public function add()
+    public function role_add()
     {
         $id=input('post.id');
         $role=Db::table('role_permission')->where('role_id','=',$id)->select();
@@ -26,7 +26,7 @@ class Role extends Common
         echo json_encode($json);
     }
     //添加角色权限
-    function role_add(){
+    function add(){
         $name=input('post.name');
         $id=input('post.id');
         $description=input('post.description');
@@ -57,7 +57,6 @@ class Role extends Common
     }
 
     public function show(){
-//        $arr=Db::table('role_permission')->field('permission.name as p_name,role.name,role.description')->join('permission','permission.id = role_permission.permission_id')->join('role','role.id = role_permission.role_id')->select();
         $arr=Db::table('role')->select();
         $json=['data'=>$arr];
         echo json_encode($json);

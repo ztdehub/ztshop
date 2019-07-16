@@ -1,0 +1,95 @@
+{include file="header"/}
+<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+<section class="Hui-article-box">
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 产品管理 <span class="c-gray en">&gt;</span> 分类管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <div class="Hui-article">
+        <article class="cl pd-20" >
+            <div class="mt-10">
+                <span onclick="one()">选择分类：</span>
+                <span id="pan" value="0">一级分类</span>
+                <br>
+                <input type="text" placeholder="分类" id="name" class="input-text" style="width:200px" id="name">
+                <button type="button" id="add" class="btn btn-success" id="" name="" ><i class="Hui-iconfont">&#xe600;</i> 添加</button>
+            </div>
+            <div class="mt-10" id="tree"></div>
+        </article>
+</div>
+</section>
+{include file="footer"/}
+<script type="text/javascript" src="__STATIC__/hui/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="__STATIC__/hui/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="__STATIC__/hui/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+    function del(id) {
+        $.ajax({
+            url:"{:url('sort/delete')}",
+            data:{
+                id:id,
+            },
+            type:'post',
+            success:function (res) {
+                show()
+                console.log(res)
+            }
+        })
+    }
+
+    function show() {
+        $.ajax({
+            url:"{:url('sort/show')}",
+            success:function (res) {
+                $("#tree").html(res)
+                //不让次元素的标签显示出来
+//                $('.aa .aa').css('display','none')
+            }
+        })
+    }
+    function one() {
+        $("#pan").html('一级分类')
+        $("#pan").attr('value',0)
+    }
+    $(document).ready(function () {
+        //添加
+        $("#add").click(function () {
+            var name=$("#name").val()
+            var id=$("#pan").attr('value')
+            $.ajax({
+                url:"{:url('sort/add')}",
+                data:{
+                    id:id,
+                    name:name
+                },
+                type:'post',
+                dataType: "json",
+                success:function (res) {
+                    if (res.status=='error'){
+                        alert(res.data)
+                    }else {
+                        alert(res.data)
+                    }
+                    show()
+                }
+            })
+        })
+        //点击改变li标签内的属性
+        $(document).on('click','.er' ,function () {
+            var bool= $(this).next().css('display');
+            var butt=$(this).html();
+            var id=$(this).attr('value');
+            $("#pan").attr('value',id);
+            var new_name=butt.split("<")[0];
+            $("#pan").html(new_name)
+            if(bool=='none'){
+                $(this).next().css('display','block')
+            }
+            if(bool=='block'){
+                $(this).next().css('display','none')
+            }
+        })
+        show()
+//        token()
+    })
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

@@ -14,7 +14,6 @@ class Role extends Validate
      */
     protected $rule = [
         'name'  =>  'require|max:10',
-        'id' => 'require|max:25',
         'description' => 'require|max:25',
     ];
 

@@ -14,7 +14,7 @@ class Permissioncategory extends Validate
      */
     protected $rule = [
         'name'  =>  'require|max:10',
-        'description' => 'require|max:25',
+        'description' => 'require|max:100',
     ];
     /**
      * 定义错误信息

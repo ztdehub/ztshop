@@ -11,7 +11,7 @@ class Login extends Controller
         return $this->fetch();
     }
     public function out(){
-        Session::delete('name');
+        Session::clear();
         $this->redirect('login/login');
     }
     public function check(){
@@ -22,13 +22,16 @@ class Login extends Controller
         if( !$captcha->check($value)) {
             $json=['start'=>'0','code'=>'验证码错误'];
         }else{
-            $data=['name'=>$name,'password'=>$password];
-            $arr=Db::table('admin')->where($data)->select();
+            $data=['user_name'=>$name,'password'=>$password];
+            $arr=Db::table('user')->where($data)->select();
             if (empty($arr)){
                 $json=['start'=>'1','code'=>'账户或密码错误'];
             }else{
+                $id=$arr[0]['id'];
                 Session::set('name',$name);
                 $json=['start'=>'3','code'=>'登录成功'];
+                $rbacObj = new Rbac();
+                $rbacObj->cachePermission($id);
             }
         }
         echo $arr=json_encode($json);

@@ -147,7 +147,7 @@
                 id:id
             },
             type:'post',
-//            dataType: "json",
+            dataType: "json",
             success:function (res) {
                 if(res.status=='error'){
                     alert(res.data)
@@ -175,7 +175,7 @@
         $("#modal-demo").modal("show")
 
         $.ajax({
-            url:"{:url('role/add')}",
+            url:"{:url('role/role_add')}",
             dataType:"json",
             success:function (res) {
                 var data=res.data
@@ -199,7 +199,7 @@
         $("#name_update").val(name);
         $("#description_update").val(description)
         $.ajax({
-            url:"{:url('role/add')}",
+            url:"{:url('role/role_add')}",
             dataType:"json",
             type:'post',
             data:{
@@ -287,7 +287,7 @@
                 id=id+','+box[i].value
             }
             $.ajax({
-                url:"{:url('role/role_add')}",
+                url:"{:url('role/add')}",
                 data:{
                     name:name,
                     description:description,

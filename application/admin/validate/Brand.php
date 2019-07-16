@@ -4,7 +4,7 @@ namespace app\admin\validate;
 
 use think\Validate;
 
-class Permission extends Validate
+class Brand extends Validate
 {
     /**
      * 定义验证规则
@@ -14,18 +14,16 @@ class Permission extends Validate
      */
     protected $rule = [
         'name'  =>  'require|max:10',
-        'path' => 'require|max:100',
         'description' => 'require|max:100',
     ];
-
     /**
      * 定义错误信息
      * 格式：'字段名.规则名'	=>	'错误信息'
      *
      * @var array
      */
-    protected $message = [
+//    protected $message = [
 //        'name'  =>  '格式不正确',
 //        'description' =>  '长度不对',
-    ];
+//    ];
 }
