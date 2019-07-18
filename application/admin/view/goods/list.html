@@ -52,14 +52,13 @@
                 var code=res.data;
                 var tr='';
                 for (var i=0; i<code.length; i++) {
-                    tr = tr + "<tr class='text-c'> <td><input value='"+code[i].id+"' class='mycheckbox' type='checkbox' ></td> <td>" + code[i].id + "</td>  <td class='text-l'>" + code[i].name + "</td><td class='text-l'>" + code[i].b_name + "</td><td class='text-l'>" + code[i].goods_sn + "</td><td class='text-l'>" + code[i].price + "</td><td class='text-l'>" + code[i].supply_price + "</td><td class='text-l'>" + code[i].maket_price + "</td><td class='text-l'>" + code[i].repertory + "</td><td class='text-l'>" + code[i].create_time + "</td><td class='text-l'>" + code[i].is_show + "</td> <td class='text-l'><a href='{:url('goodsimg/list')}?id="+code[i]['id']+"'>图片</a><td class='text-l'><a href='{:url('goods/goodsattr')}?id="+code[i]['id']+"'>属性</a></td><td class='f-14 product-brand-manage'><a   onclick='modalup(\""+ code[i].id +"\",\""+code[i].name+"\",\""+code[i].description+"\")' style='text-decoration:none'  href='javascript:;' title='编辑'><i class='Hui-iconfont'>&#xe6df;</i></a> <a style='text-decoration:none' class='ml-5'  onclick='del(" + code[i].id + ")' title='删除' ><i class='Hui-iconfont'>&#xe6e2;</i></a></td> </tr>";
+                    tr = tr + "<tr class='text-c'> <td><input value='"+code[i].id+"' class='mycheckbox' type='checkbox' ></td> <td>" + code[i].id + "</td>  <td class='text-l'>" + code[i].name + "</td><td class='text-l'>" + code[i].b_name + "</td><td class='text-l'>" + code[i].goods_sn + "</td><td class='text-l'>" + code[i].price + "</td><td class='text-l'>" + code[i].supply_price + "</td><td class='text-l'>" + code[i].maket_price + "</td><td class='text-l'>" + code[i].repertory + "</td><td class='text-l'>" + code[i].create_time + "</td><td class='text-l'>" + code[i].is_show + "</td> <td class='text-l'><a href='{:url('goodsimg/list')}?id="+code[i]['id']+"'>图片</a><td class='text-l'><a href='{:url('goods/attr')}?id="+code[i]['id']+"'>属性</a></td><td class='f-14 product-brand-manage'><a   onclick='modalup(\""+ code[i].id +"\",\""+code[i].name+"\",\""+code[i].description+"\")' style='text-decoration:none'  href='javascript:;' title='编辑'><i class='Hui-iconfont'>&#xe6df;</i></a> <a style='text-decoration:none' class='ml-5'  onclick='del(" + code[i].id + ")' title='删除' ><i class='Hui-iconfont'>&#xe6e2;</i></a></td> </tr>";
                 }
                 $(".table tbody").html(tr)
             }
         })
     }
     //命令
-
     //批量删除
     function del(id) {
 //        var tokens=$('#token').va*/7l();

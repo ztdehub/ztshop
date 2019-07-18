@@ -8,6 +8,12 @@ class Goods extends Common
     {
         return $this->fetch();
     }
+    function phone(){
+        return $this->fetch();
+    }
+    function computer(){
+        return $this->fetch();
+    }
     function goodsattr(){
         return $this->fetch();
     }
@@ -54,6 +60,40 @@ class Goods extends Common
     {
         $arr = Db::table('sort')->select();
         $this->getTree($arr);
+    }
+    function attr(){
+        $id=input('get.id');
+        $this->assign('id',$id);
+        return $this->fetch();
+    }
+    //属性选择的展示
+    function aa(){
+        $attrid=input('post.attr_id');
+        $id=input('post.id');
+        $attr=Db::table('goods_attr')->where('goods_id',$attrid)->where('attr_cate_id',$id)->select();
+
+        $arr= Db::table('attr_details')->field('attribute.name,attr_details.name as d_name,attr_details.id')->join('attribute','attr_details.attr_id = attribute.id')->where('attrcate_id',$id)->select();
+        $ass=[];
+        foreach ($arr as $key=>$value){
+            $ass[$value['name']][]=[$value['d_name'],$value['id']];
+        }
+        $json=['code'=>'0','status'=>'ok','data'=>$ass,'date'=>$attr];
+        echo json_encode($json);
+    }
+
+    function goodsattrad(){
+        $attr_cate_id=input('post.attr_cate_id');
+        $id=input('post.id');
+        $attrid=input('post.attrid');
+        $arr=substr($attrid,'1');
+        Db::table('goods_attr')->where('goods_id',$id)->delete();
+        $pieces = explode(",", $arr);
+        foreach ($pieces as $key => $value){
+           $arr=Db::table('attr_details')->where('id',$value)->find();
+           $arr_id=$arr['attr_id'];
+           $data=['goods_id'=>$id,'attr_details_id'=>$value,'attr_id'=>$arr_id,'attr_cate_id'=>$attr_cate_id];
+           Db::table('goods_attr')->insert($data);
+        }
     }
 }
 

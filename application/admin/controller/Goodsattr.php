@@ -12,8 +12,11 @@ class Goodsattr extends Common
         Db::table('attr_category')->insert($data);
     }
     function show(){
+        $id=input('post.id');
+        $ass=Db::table('goods_attr')->where('goods_id',$id)->find();
+        $attr_cate_id=$ass['attr_cate_id'];
         $arr=Db::table('attr_category')->select();
-        $json=['data'=>$arr];
+        $json=['data'=>$arr,'date'=>$attr_cate_id];
         echo json_encode($json);
     }
     function attr(){
@@ -41,9 +44,5 @@ class Goodsattr extends Common
         $id=input('post.id');
         $data=['name'=>$name,'attr_id'=>$id];
         echo$arr=Db::table('attr_details')->insertGetId($data);
-    }
-    function aa(){
-       $arr= Db::table('attr_details')->field('attribute.name,attr_details.name as d_name')->join('attribute','attr_details.attr_id = attribute.id')->select();
-       var_dump($arr);
     }
 }

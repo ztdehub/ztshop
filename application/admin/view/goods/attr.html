@@ -1,0 +1,118 @@
+{include file="header"/}
+<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+<section class="Hui-article-box">
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 属性管理 <span class="c-gray en">&gt;</span> 属性添加 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"  title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <div class="Hui-article">
+        <article class="cl pd-20">
+            <div class="row cl">
+
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span>分类：</span>
+                   <span class="select-box">
+                       <select name="" class="select" id="select" onchange="show()">
+
+                       </select>
+                   </span>
+                </div>
+            </div>
+
+            <div class="row cl">
+
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <span>属性：</span>
+                        <dl class="permission-list" id="role_list">
+
+                        </dl>
+                    </div>
+                </div>
+            <button type="submit" class="btn btn-success radius" onclick="add()" name="admin-role-save"><i class="icon-ok"></i> 确定</button>
+
+        </article>
+    </div>
+</section>
+
+{include file="footer"/}
+<script>
+    function attrshow() {
+        $.ajax({
+            url:"{:url('goodsattr/show')}",
+            type:"post",
+            dataType:"json",
+            data:{
+              id:{$id}
+            },
+            success:function (res) {
+                var code=res.data;
+                var date=res.date;
+                console.log(date)
+                var option='<option value="0">选择分类</option>';
+                $.each(code,function(key,value){
+                    option=option+"<option value='"+value.id+"'>"+value.name+"</option>";
+                })
+                $("#select").html(option)
+                if (date!=''){
+                    $("#select option[value='"+date+"']").prop("selected",true);
+                    show()
+                }
+            }
+        })
+    }
+
+    function show(){
+        var id=$("#select").val()
+        $.ajax({
+            url:"{:url('goods/aa')}",
+            data:{
+                id:id,
+                attr_id:{$id}
+
+            },
+            type:'post',
+            dataType:"json",
+            success:function (res) {
+                var date=res.date
+                var data=res.data
+                var ret='';
+                $.each(data,function(key,value){
+                    ret=ret+" <dt><label><input type='checkbox' value=''>"+key+"</label></dt><dd>";
+                    $.each(value,function(key1,value1){
+                        ret=ret+"<label class=''><input class='mycheckbox' type='checkbox' id='a"+value1[1]+"' value='"+value1[1]+"' >"+value1[0]+"</label>&nbsp;&nbsp;&nbsp";
+                    })
+                    ret=ret+"</dd>"
+                })
+                $("#role_list").html(ret)
+                $.each(date,function (key,value) {
+                    var i=value.attr_details_id
+                    var id='a'+i
+                    $('#'+id).prop("checked",true)
+                })
+
+
+            }
+        })
+    }
+
+    function add() {
+        var ids = $('.mycheckbox:checked')
+        var attr_cate_id=$("#select").val()
+        attrid='';
+        for (var i=0; i<ids.length; i++){
+            attrid=attrid+","+ids[i].value
+        }
+        $.ajax({
+            url:"{:url('goods/goodsattrad')}",
+            data:{
+                id:{$id},
+                attrid:attrid,
+                attr_cate_id:attr_cate_id
+            },
+            type:'post',
+//            dataType:"json",
+            success:function (res) {
+                console.log(res)
+            }
+        })
+
+    }
+    attrshow()
+</script>
