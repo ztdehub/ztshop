@@ -4,12 +4,21 @@ use think\Db;
 use think\Controller;
 use Session;
 use Request;
+use Cache;
 use gmars\rbac\Rbac;
 class Common extends Controller
 {
     public function __construct(){
         parent::__construct();
         $a=Session::get('name');
+        //缓存
+//         $arr=Cache::get($a);
+//            if (!$arr){
+//                Cache::set($a,1,3600);
+//            }else{
+//            Cache::set($a,$arr+1,3600);
+//        }
+
         $this->assign('name',$a);
         if (empty($a)){
             $this->redirect('login/login');
@@ -33,5 +42,6 @@ class Common extends Controller
                 }
             }
         }
+
     }
 }

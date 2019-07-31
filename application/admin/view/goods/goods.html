@@ -1,0 +1,140 @@
+{include file="header"/}
+<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+<section class="Hui-article-box">
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 属性管理 <span class="c-gray en">&gt;</span> 属性添加 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"  title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <div class="Hui-article">
+        <article class="cl pd-20">
+            <div class="row cl">
+
+                <div class="formControls col-xs-8 col-sm-9" id="div">
+
+                </div>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span>价格：</span>
+                    <input type="text" class="input-text" value="" placeholder="" id="price" name="">
+                </div>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span>数量：</span>
+                    <input type="text" class="input-text" value="" placeholder="" id="number" name="">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success radius" onclick="add()" name="admin-role-save"><i class="icon-ok"></i> 确定</button>
+
+        </article>
+        <article class="cl pd-20">
+            <table class="table table-border table-bordered table-bg">
+                <thead>
+                <tr>
+                    <th scope="col" colspan="7">货品展示</th>
+                </tr>
+                <tr class="text-c">
+                    <th width="25"><input type="checkbox" name="" value=""></th>
+                    <th width="40">ID</th>
+                    <th width="200">货品属性</th>
+                    <th width="200">价格</th>
+                    <th width="100">库存</th>
+                    <th width="100">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+        </article>
+    </div>
+</section>
+{include file="footer"/}
+<script>
+    function attrshow() {
+        $.ajax({
+            url:"{:url('goods/attrshow')}",
+            data:{
+                id:{$id}
+            },
+            type:'post',
+            dataType:'json',
+            success:function (res) {
+                if (res.code==1){
+                    var code=res.data
+                    console.log(res)
+                    var tr='';
+                    for (var i=0; i<code.length; i++) {
+                        tr = tr + "<tr class='text-c'> <td><input value='"+code[i].id+"' class='mycheckbox' type='checkbox' ></td> <td>" + code[i].id + "</td></td> <td>" + code[i].key + "</td> <td>"+code[i].price+"</td><td>"+code[i].sn_number+"</td><td class='f-14 product-brand-manage'><a   onclick='modalup(\""+ code[i].id +"\",\""+code[i].name+"\")' style='text-decoration:none'  href='javascript:;' title='编辑'><i class='Hui-iconfont'>&#xe6df;</i></a> <a style='text-decoration:none' class='ml-5'  onclick='del(" + code[i].id + ")' title='删除' ><i class='Hui-iconfont'>&#xe6e2;</i></a></td> </tr>";
+                    }
+                    $(".table tbody").html(tr)
+                }
+            }
+        })
+    }
+    function del(id) {
+        $.ajax({
+            url:"{:url('goods/goodsdel')}",
+            data:{
+                id:id,
+            },
+            dataType:'json',
+            type:'post',
+            success:function (res) {
+                attrshow()
+                alert(res.data)
+            }
+        })
+    }
+    function show() {
+        $.ajax({
+            url:"{:url('goods/goodsshow')}",
+            dataType:'json',
+            data:{
+              id:{$id}
+            },
+            type:'post',
+            success:function (res) {
+                if (res.code==1){
+                    var div=''
+                    var data=res.data
+                    $.each(data,function (key,value) {
+                        div=div+"<span>"+key+"</span>";
+                        div=div+" <span class='select-box'><select  class='select' id='sel"+value[0]['b_id']+"'>"
+                        $.each(value,function (key1,value1) {
+                            div=div+"<option value='"+value1.id+"'>"+value1.name+"</option>"
+                        })
+                        div=div+"</select></span>"
+                    })
+                    $("#div").html(div)
+                }
+            }
+        })
+    }
+    function add() {
+        var div=$("#div").find('select')
+        var ass='';
+        for (var i=0; i<div.length; i++){
+             ass=ass+','+div[i].value
+        }
+        var price=$("#price").val()
+        var number=$("#number").val()
+        $.ajax({
+            url:"{:url('goods/goodsadd')}",
+            data:{
+                id:{$id},
+                goods_id:ass,
+                price:price,
+                number:number
+            },
+            dataType:'json',
+            type:'post',
+            success:function (res) {
+                console.log(res)
+                if(res.code==1){
+                    attrshow()
+                    alert(res.data)
+                }else {
+                    alert(res.data)
+                }
+            }
+        })
+    }
+    show()
+    attrshow()
+</script>
+

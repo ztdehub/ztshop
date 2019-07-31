@@ -88,8 +88,7 @@ class User extends Common
                 Db::table('user')->where('id','in',$pieces)->delete();
                 Db::table('user_role')->where('user_id','in',$pieces)->delete();
             });
-            $json=['code'=>'0','status'=>'ok','
-            data'=>'删除成功'];
+            $json=['code'=>'0','status'=>'ok','data'=>'删除成功'];
             echo json_encode($json);
         }
     }
